@@ -29,7 +29,7 @@ export default function Tabs(props) {
                 component={HomeNavigator}
                 options={{
                     tabBarIcon: ({ color, size }) => {
-                        <MaterialCommunityIcons name="home" color={color} size={20} />
+                        <MaterialCommunityIcons name="home" size={20} />
                     }
                 }}
             />
@@ -38,7 +38,7 @@ export default function Tabs(props) {
                 component={HistoricNavigator}
                 options={{
                     tabBarIcon: ({ color, size }) => {
-                        <MaterialCommunityIcons name="history" color={color} size={20} />
+                        <MaterialCommunityIcons name="history" size={20} />
                     }
                 }}
             />
@@ -47,7 +47,7 @@ export default function Tabs(props) {
                 component={AccountNavigator}
                 options={{
                     tabBarIcon: ({ color, size }) => {
-                        <MaterialCommunityIcons name="account" color={color} size={20} />
+                        <MaterialCommunityIcons name="account" size={20} />
                     }
                 }}
             />
