@@ -2,7 +2,8 @@ import React from 'react';
 import { Text, SafeAreaView } from 'react-native';
 
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+// import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { Icon } from 'react-native-elements';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -29,7 +30,10 @@ export default function Tabs(props) {
                 component={HomeNavigator}
                 options={{
                     tabBarIcon: ({ color, size }) => {
-                        <MaterialCommunityIcons name="home" size={20} />
+                        <Icon
+                            name='home-outline'
+                            type='ionicon'
+                        />
                     }
                 }}
             />
@@ -38,7 +42,10 @@ export default function Tabs(props) {
                 component={HistoricNavigator}
                 options={{
                     tabBarIcon: ({ color, size }) => {
-                        <MaterialCommunityIcons name="history" size={20} />
+                        <Icon
+                            name='document-text-outline'
+                            type='ionicon'
+                        />
                     }
                 }}
             />
@@ -47,7 +54,10 @@ export default function Tabs(props) {
                 component={AccountNavigator}
                 options={{
                     tabBarIcon: ({ color, size }) => {
-                        <MaterialCommunityIcons name="account" size={20} />
+                        <Icon
+                            name='body-outline'
+                            type='ionicon'
+                        />
                     }
                 }}
             />

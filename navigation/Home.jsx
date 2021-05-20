@@ -1,9 +1,9 @@
 import React from 'react';
 import { Text, SafeAreaView, FlatList, View, StyleSheet, ActivityIndicator } from 'react-native';
-// import { Icon } from 'react-native-elements';
+import { Icon } from 'react-native-elements';
 
 import AppButton from '../components/AppButton'
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+// import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 
 const programmes = [
@@ -33,27 +33,28 @@ const programmes = [
 const colors = ["#BA1D35", "#F2D815", "#00C4C1"]
 const icons = ["home"]
 
-// const getIcons = (level) => {
-//     let icon;
-//     switch (level) {
-//         case 1:
-//             icon = "accessibility-outline";
-//             break;
-//         case 2:
-//             icon = "fitness-outline";
-//             break;
-//         case 3:
-//             icon = "flash-outline";
-//             break;
-//         default:
-//             break;
-//     }
-//     return icon
-// }
+const getIcons = (level) => {
+    let icon;
+    switch (level) {
+        case 1:
+            icon = "happy-outline";
+            break;
+        case 2:
+            icon = "fitness-outline";
+            break;
+        case 3:
+            icon = "flash-outline";
+            break;
+        default:
+            break;
+    }
+    return icon
+}
 // <Icon
 // name={getIcons(item.level)}
 // type='ionicon'
 // />
+// <MaterialCommunityIcons name="home" size={20} /> 
 
 export default function Home(props) {
     // console.log(`Home -> props`, props)
@@ -85,18 +86,22 @@ export default function Home(props) {
 
                             />
                             <View style={styles.description}>
-                                <MaterialCommunityIcons name="home" size={20} />
 
+                                <Icon
+                                    name={getIcons(item.level)}
+                                    type='ionicon'
+                                />
                                 <Text style={styles.textDescription}>{item.description}</Text>
                             </View>
                         </>
 
-                    )}
+                    )
+                    }
                 />)
                 : (<ActivityIndicator style={styles.loader} size="large" color="#00C4C1" />)
             }
 
-        </SafeAreaView>
+        </SafeAreaView >
     )
 }
 
