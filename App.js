@@ -1,16 +1,20 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack' // => permet d'englober l'ensemble de la navigation - une stack représente un bloc qui va permet de gérer la navigation entre les différents screens
-import { NavigationContainer } from '@react-navigation/native'; // 
+import { NavigationContainer } from '@react-navigation/native';
+
+import store from "./store";
+
+//Redux 
+import { provider } from 'react-redux';
+
 
 // chargement des pages
 import Home from './navigation/Home';
 import Historic from './navigation/Historic';
 import Account from './navigation/Account';
 // chargement des screens-components
-import Program from './components/Program'
-import Player from './components/Player'
+import Program from './navigation/Program'
+import Player from './navigation/Player'
 
 import Tabs from './navigation/Tabs'
 
@@ -65,14 +69,16 @@ export default function App() {
 
 
   return (
+    <Provider store={store}>
+      <NavigationContainer>
+        <Tabs
+          HomeNavigator={HomeNavigator}
+          HistoricNavigator={HistoricNavigator}
+          AccountNavigator={AccountNavigator}
+        />
+      </NavigationContainer>
+    </Provider>
 
-    <NavigationContainer>
-      <Tabs
-        HomeNavigator={HomeNavigator}
-        HistoricNavigator={HistoricNavigator}
-        AccountNavigator={AccountNavigator}
-      />
-    </NavigationContainer>
 
   );
 }
