@@ -4,11 +4,11 @@ import { HOST_IP } from '@env';
 export const GET_PROGRAMS = "[PROGRAMS] GET PROGRAMS" // [NOM DU PARENT] + NOM DE L'ACTION
 
 export function getPrograms() {
-    const request = axios.get(`${HOST_IP}/api/programs/list`, {
+    const request = axios.get(`${HOST_IP}/api/programmes/liste`, {
         params: {}
     });
 
-
+    //          v dispatch de l'action vers le reducers le type et le retour de la l'action
     return dispatch => request.then((response) => {
         dispatch({
             type: GET_PROGRAMS, // type de l'action
