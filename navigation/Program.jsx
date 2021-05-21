@@ -31,19 +31,22 @@ function Program(props) {
     // console.log(`Program -> subPrograms`, subPrograms)
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={styles.main_container}>
+            {subPrograms.length > 0
+                ? (<FlatList
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}
+                    data={subPrograms}
+                    keyExtractor={(item) => item._id.toString()}
+                    renderItem={({ item, index }) => (
+                        <>
+                            <Text>{item.title}</Text>
+                        </>
+                    )}
+                />)
+                : (<ActivityIndicator style={styles.loader} size="large" color="#00C4C1" />)
+            }
 
-            <FlatList
-                showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}
-                data={subPrograms}
-                keyExtractor={(item) => item._id.toString()}
-                renderItem={({ item, index }) => (
-                    <>
-                        <Text>{item.title}</Text>
-                    </>
-                )}
-            />
 
 
 
@@ -52,5 +55,18 @@ function Program(props) {
     )
 }
 
+const styles = StyleSheet.create({
+    main_container: {
+        flex: 1
+        , marginTop: 10
+        , padding: 10
+
+        // , marginHorizontal: 10
+    },
+    loader: {
+        flex: 1
+    }
+
+})
 
 export default connect(mapStateToProps)(Program);

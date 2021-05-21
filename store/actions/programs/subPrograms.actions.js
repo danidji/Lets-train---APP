@@ -10,8 +10,6 @@ export function getSubPrograms(id) {
 
 
     return dispatch => request.then((response) => {
-        console.log(`returndispatch=>request.then -> response`, response.data)
-
         dispatch({
             type: GET_SUBPROGRAMS,
             payload: response.data
