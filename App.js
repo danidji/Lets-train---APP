@@ -5,7 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import store from "./store";
 
 //Redux 
-import { provider } from 'react-redux';
+import { Provider } from 'react-redux';
 
 
 // chargement des pages

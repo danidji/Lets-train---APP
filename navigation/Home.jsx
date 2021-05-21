@@ -1,37 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Text, SafeAreaView, FlatList, View, StyleSheet, ActivityIndicator } from 'react-native';
 import { Icon } from 'react-native-elements';
 
 import AppButton from '../components/AppButton'
-// import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+
+//Import redux
+import { connect, useDispatch, useSelector } from "react-redux"
+import { getPrograms } from '../store/actions';
 
 
-const programmes = [
-    {
-        _id: "609d57d819e6846e473d4fc3",
-        name: "Débutant",
-        level: 1,
-        description: "Commencez tout en douceur!",
-        poster_image: "https://i.ibb.co/42gmhCq/MAIN-DEBUTANT.png",
-    },
-    {
-        _id: "609d582219e6846e473d4fc4",
-        name: "Intérmédiaire",
-        level: 2,
-        description: "Lancez vous des défis et allez plus loin!",
-        poster_image: "https://i.ibb.co/s6V5r1d/MAIN-INTERMEDIAIRE.png",
-    },
-    {
-        _id: "609d584019e6846e473d4fc6",
-        name: "Avancé",
-        level: 3,
-        description: "Repoussez vos limites!",
-        poster_image: "https://i.ibb.co/D57J8TW/MAIN-AVANCE.png",
-    },
-];
 // const programmes = [];
 const colors = ["#BA1D35", "#F2D815", "#00C4C1"]
-const icons = ["home"]
 
 const getIcons = (level) => {
     let icon;
@@ -50,15 +29,24 @@ const getIcons = (level) => {
     }
     return icon
 }
-// <Icon
-// name={getIcons(item.level)}
-// type='ionicon'
-// />
-// <MaterialCommunityIcons name="home" size={20} /> 
+// initialisation de la variable de connection à redux 
+const mapStateToProps = (state) => {
+    return state;
+}
 
-export default function Home(props) {
-    // console.log(`Home -> props`, props)
+function Home(props) {
     const { route, navigation } = props;
+
+    const dispatch = useDispatch();
+    const programmes = useSelector(
+        ({ programsReducer }) => programsReducer.programs
+    ); // permet de selectionner le réducteurs qui m'intéresse
+
+    //A l'affichage on appelle la fonction getPrograms
+    useEffect(() => {
+        dispatch(getPrograms());
+    }, [dispatch])
+
     return (
         <SafeAreaView style={styles.main_container}>
             {programmes.length > 0 // Si la taille de mon tableau "programme" est >0 alors j'affiche mes éléments, sinon j'affiche mon élément de chargement
@@ -131,3 +119,6 @@ const styles = StyleSheet.create({
     }
 
 })
+
+
+export default connect(mapStateToProps)(Home); // on exporte la fonction home avec les méthodes lié à notre store redux

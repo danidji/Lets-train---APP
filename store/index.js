@@ -1,4 +1,4 @@
-import { applyMiddleware, compose, createStore } from "redux;"
+import { applyMiddleware, compose, createStore } from "redux";
 import logger from 'redux-logger'; // logger les erreurs de redux => peut charger la console
 import { NODE_ENV } from '@env';
 
