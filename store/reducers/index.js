@@ -1,12 +1,14 @@
 import { combineReducers } from "redux"; // permet d'assembler les reducers
+
+// import des reducers
 import programsReducer from "./programs/programs.reducer"
-// import programsinsideReducer from './programs/programsInside.reducer';// /!\ ne mettre qu'une seule majuscule dans le nom de variable
+import subprogramsReducer from './programs/subPrograms.reducer'; // /!\ ne mettre qu'une seule majuscule dans le nom de variable
 
 // permet de répertorier tous les fichiers reducer créés
 
 const createReducer = combineReducers({
     programsReducer,
-    // programsinsideReducer
+    subprogramsReducer
 })
 
 export default createReducer;

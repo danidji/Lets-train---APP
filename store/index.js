@@ -13,7 +13,7 @@ const composeEnhancers =
         window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({}) //actionsBlacklist, actionsCreators, serialize
         : compose;
 
-const enhancer = composeEnhancers(applyMiddleware(thunk, logger)); //permet d'injecter des choses 
-// const enhancer = composeEnhancers(applyMiddleware(thunk)); // => a activer si la console est trop chargé
+// const enhancer = composeEnhancers(applyMiddleware(thunk, logger)); //permet d'injecter des choses 
+const enhancer = composeEnhancers(applyMiddleware(thunk)); // => a activer si la console est trop chargé
 
 export default createStore(createReducer, enhancer)
