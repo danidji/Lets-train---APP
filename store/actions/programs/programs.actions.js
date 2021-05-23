@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { HOST_IP } from '@env';
-import programsReducer from '../../reducers/programs/programs.reducer';
 
 export const GET_PROGRAMS = "[PROGRAMS] GET PROGRAMS" // [NOM DU PARENT] + NOM DE L'ACTION
 

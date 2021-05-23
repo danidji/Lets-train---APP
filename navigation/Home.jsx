@@ -60,7 +60,7 @@ function Home(props) {
                             <AppButton
 
                                 onPress={() => {
-                                    //On définit vers quel screen on veux aller, grace à la props name définit dans App
+                                    //On définit vers quel screen on veut aller, grace à la props name définit dans App
                                     navigation.navigate("Programme", {
                                         title: item.name
                                         , level: item.level
