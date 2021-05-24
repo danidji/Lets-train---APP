@@ -23,6 +23,7 @@ function PlayerButton({ onPress, title, image, duration, bgc }) {
                         name='timer-outline'
                         type='ionicon'
                     />
+
                     <Text>{duration / 60} min</Text>
                 </View>
             </View>
@@ -33,7 +34,6 @@ function PlayerButton({ onPress, title, image, duration, bgc }) {
 
 const styles = StyleSheet.create({
     program_button: {
-
         flex: 1
         , flexDirection: "row"
         , justifyContent: "space-between"

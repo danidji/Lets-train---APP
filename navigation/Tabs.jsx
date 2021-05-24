@@ -20,10 +20,10 @@ export default function Tabs(props) {
             tabBarOptions={{
                 activeBackgroundColor: "#fff",
                 inactiveBackgroundColor: "#fff",
-                activeTintColor: '#4c46fc',
+                activeTintColor: '#3880FF',
                 inactiveTintColor: "#9B9B9B",
                 showIcon: true,
-                indicatorStyle: { backgroundColor: '#4c46fc', top: 0 }
+                indicatorStyle: { backgroundColor: '#3880FF', top: 0 }
             }}
         >
             <Tab.Screen
