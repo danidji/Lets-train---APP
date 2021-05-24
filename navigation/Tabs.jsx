@@ -27,7 +27,7 @@ export default function Tabs(props) {
             }}
         >
             <Tab.Screen
-                name="Home"
+                name="Accueil"
                 component={HomeNavigator}
                 options={{
                     tabBarIcon: ({ color, size }) => (
@@ -41,7 +41,7 @@ export default function Tabs(props) {
                 }}
             />
             <Tab.Screen
-                name="Historic"
+                name="Historique"
                 component={HistoricNavigator}
                 options={{
                     tabBarIcon: ({ color, size }) => (
@@ -55,7 +55,7 @@ export default function Tabs(props) {
                 }}
             />
             <Tab.Screen
-                name="Account"
+                name="Compte"
                 component={AccountNavigator}
                 options={{
                     tabBarIcon: ({ color, size }) => (
