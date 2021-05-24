@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { HOST_IP } from '@env';
+import { HOST_IP, HOST_IP_HOME } from '@env';
 
 export const GET_PROGRAMS = "[PROGRAMS] GET PROGRAMS" // [NOM DU PARENT] + NOM DE L'ACTION
 

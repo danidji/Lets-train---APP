@@ -31,24 +31,20 @@ export default function Player({ route }) {
     const restartPlaying = () => {
         playerRef.current.seekTo(0, true);
     }
-    // const test = useCallback(() => {
-    //     setDuration(playerRef.current.getCurrentTime().then((data) => console.log(Math.round(data / 60))))
 
-    // }, [duration])
+    // useEffect(() => {
 
-    useEffect(() => {
+    //     const interval = setInterval(() => {
 
-        const interval = setInterval(() => {
-
-            playerRef.current.getCurrentTime().then((data) => {
-                console.log(Math.round(data / 60))
-            })
-            // setDuration(playerRef.current.getCurrentTime().then((data) => console.log(Math.round(data / 60))))
-        }, 1000);
-        return () => {
-            clearInterval(interval)
-        }
-    }, [])
+    //         playerRef.current.getCurrentTime().then((data) => {
+    //             console.log(Math.round(data / 60))
+    //         })
+    //         // setDuration(playerRef.current.getCurrentTime().then((data) => console.log(Math.round(data / 60))))
+    //     }, 1000);
+    //     return () => {
+    //         clearInterval(interval)
+    //     }
+    // }, [])
 
     return (
         <SafeAreaView>
@@ -75,8 +71,6 @@ export default function Player({ route }) {
                     iconStyle={styles.video_button}
 
                 />
-
-
                 {playing
                     ? (<Icon
 
@@ -104,7 +98,7 @@ export default function Player({ route }) {
                 />
 
             </View>
-            <Text>{duration}m</Text>
+            <Text>{/* duration */}m</Text>
 
         </SafeAreaView >
     )
