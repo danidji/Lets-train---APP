@@ -16,49 +16,56 @@ export default function Tabs(props) {
             animationEnable={false} //Permet d'améliorer les performances de l'appli
             initialRouteName="Home" //route de la screen à afficher lors du chargement du navigateur
             tabBarPosition="bottom"
+            lazy={true}
             tabBarOptions={{
                 activeBackgroundColor: "#fff",
                 inactiveBackgroundColor: "#fff",
-                activeTintColor: 'blue',
+                activeTintColor: '#4c46fc',
                 inactiveTintColor: "#9B9B9B",
                 showIcon: true,
-                indicatorStyle: { backgroundColor: 'blue', top: 0 }
+                indicatorStyle: { backgroundColor: '#4c46fc', top: 0 }
             }}
         >
             <Tab.Screen
                 name="Home"
                 component={HomeNavigator}
                 options={{
-                    tabBarIcon: ({ color, size }) => {
+                    tabBarIcon: ({ color, size }) => (
                         <Icon
                             name='home-outline'
                             type='ionicon'
+                            color={color}
+                            size={20}
                         />
-                    }
+                    )
                 }}
             />
             <Tab.Screen
                 name="Historic"
                 component={HistoricNavigator}
                 options={{
-                    tabBarIcon: ({ color, size }) => {
+                    tabBarIcon: ({ color, size }) => (
                         <Icon
                             name='document-text-outline'
                             type='ionicon'
+                            color={color}
+                            size={20}
                         />
-                    }
+                    )
                 }}
             />
             <Tab.Screen
                 name="Account"
                 component={AccountNavigator}
                 options={{
-                    tabBarIcon: ({ color, size }) => {
+                    tabBarIcon: ({ color, size }) => (
                         <Icon
                             name='body-outline'
                             type='ionicon'
+                            color={color}
+                            size={20}
                         />
-                    }
+                    )
                 }}
             />
         </Tab.Navigator >
