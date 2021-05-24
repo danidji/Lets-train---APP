@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { Text, SafeAreaView, FlatList, View, StyleSheet, ActivityIndicator } from 'react-native';
 
+import PlayerButton from '../components/PlayerButton'
+
 //Import redux
 import { connect, useDispatch, useSelector } from "react-redux"
 import { getSubPrograms } from '../store/actions';
@@ -15,7 +17,8 @@ const mapStateToProps = (state) => {
 
 
 function Program(props) {
-    const { route } = props
+    console.log(`Program -> props`, props)
+    const { route, navigation } = props
     // console.log(`Program -> props`, route.params.id)
 
     const dispatch = useDispatch();
@@ -32,6 +35,7 @@ function Program(props) {
 
     return (
         <SafeAreaView style={styles.main_container}>
+            <Text style={styles.title}>{route.params.title} (niveau{route.params.level})</Text>
             {subPrograms.length > 0
                 ? (<FlatList
                     showsVerticalScrollIndicator={false}
@@ -40,7 +44,20 @@ function Program(props) {
                     keyExtractor={(item) => item._id.toString()}
                     renderItem={({ item, index }) => (
                         <>
-                            <Text>{item.title}</Text>
+                            <PlayerButton
+                                onPress={() => {
+                                    navigation.navigate('Player', {
+                                        title: item.title
+                                        , video: item.video_url
+                                        , duration: item.duration_indicator
+                                    })
+                                }}
+                                title={item.title}
+                                image={item.poster_image}
+                                duration={item.duration_indicator}
+                                bgc={index % 2 ? "#F2F2F2" : "#fff"}
+
+                            />
                         </>
                     )}
                 />)
@@ -58,13 +75,18 @@ function Program(props) {
 const styles = StyleSheet.create({
     main_container: {
         flex: 1
-        , marginTop: 10
+        , marginTop: 0
         , padding: 10
 
         // , marginHorizontal: 10
     },
     loader: {
         flex: 1
+    },
+    title: {
+        fontSize: 30
+        , fontWeight: "bold"
+        , textAlign: "center"
     }
 
 })
