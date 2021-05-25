@@ -12,6 +12,17 @@ const mapStateToProps = (state) => {
     return state;
 }
 
+function format(time) {
+    let mins = ~~(time / 60);
+    let secs = ~~(time - mins * 60);
+
+    let ret = "";
+
+    ret += "" + mins + ":" + (secs < 10 ? "0" : "");
+    ret += "" + secs;
+    return ret;
+}
+
 
 
 function Player({ route, navigation }) {
@@ -30,7 +41,7 @@ function Player({ route, navigation }) {
 
 
     //Hooks init 
-    const [duration, setDuration] = useState(myItem.duration_indicator / 60);
+    const [duration, setDuration] = useState(format(myItem.duration_indicator));
     const [playing, setPlaying] = useState(false);
 
 
@@ -52,7 +63,8 @@ function Player({ route, navigation }) {
             playerRef.current?.getCurrentTime().then((currentTime) => {
                 playerRef.current?.getDuration().then((duration) => {
 
-                    setDuration(Math.round((duration - currentTime) / 60))
+                    // setDuration(Math.round((duration - currentTime) / 60))
+                    setDuration(parseInt(duration - currentTime))
                 })
             })
 
@@ -62,7 +74,7 @@ function Player({ route, navigation }) {
 
     // Gestion des changements d'états
     const onStateChange = (state) => {
-        console.log(`onStateChange -> state`, state)
+        // console.log(`onStateChange -> state`, state)
 
         // Quand la vidéo est lancé
         if (state === 'playing') {
@@ -92,7 +104,6 @@ function Player({ route, navigation }) {
     const restartPlaying = () => {
         playerRef.current.seekTo(0, true);
     }
-
     return (
         <SafeAreaView style={styles.main_container}>
             <View style={styles.header}>
@@ -152,7 +163,7 @@ function Player({ route, navigation }) {
             <View style={styles.duration}>
 
 
-                <Text style={styles.text_duration}> Temps restant <Text style={duration <= 3 ? { ...styles.time, color: 'red' } : styles.time}>{duration}</Text> min</Text>
+                <Text style={styles.text_duration}> Temps restant <Text style={duration <= 180 ? { ...styles.time, color: 'red' } : styles.time}>{format(duration)}</Text> min</Text>
             </View>
 
         </SafeAreaView >
