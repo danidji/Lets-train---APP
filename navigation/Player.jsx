@@ -3,33 +3,62 @@ import { Text, SafeAreaView, Button, Alert, View, StyleSheet } from 'react-nativ
 import YoutubePlayer from "react-native-youtube-iframe";
 import { Icon } from 'react-native-elements';
 
-export default function Player({ route }) {
+//Import redux
+import { connect, useDispatch, useSelector } from "react-redux"
+import { getSubPrograms, getNextItem } from '../store/actions';
+
+//init variable de connection redux
+const mapStateToProps = (state) => {
+    return state;
+}
+
+
+
+function Player({ route, navigation }) {
     //récupération des données de la vidéo en question
     let myItem = route.params.item;
+    // console.log(`Player ->myItem`, myItem)
 
     const playerRef = useRef();
-    // console.log(`Player -> playerRef`, playerRref)
-
-    // console.log(`useRef`, playerRef)
-    const [duration, setDuration] = useState(myItem.duration_indicator / 60);
-
-    const [playing, setPlaying] = useState(false);
-
     // on expose notre interval à l'ensemble de notre composant
     const intervalRef = useRef(null)
+    const dispatch = useDispatch();
+
+    const nextProgram = useSelector(
+        ({ subprogramsReducer }) => subprogramsReducer.nextProgram
+    );
+
+    const subPrograms = useSelector(
+        ({ subprogramsReducer }) => subprogramsReducer.subPrograms
+    );
+
+    //Hooks init 
+    const [duration, setDuration] = useState(myItem.duration_indicator / 60);
+    const [playing, setPlaying] = useState(false);
+
+
+    // Exposition des actions dans le dispatch
+    useEffect(() => {
+        dispatch(getNextItem(myItem.program, myItem.order + 1)).then((result) => {
+        })
+    }, [dispatch])
+
+    useEffect(() => {
+        dispatch(getSubPrograms(myItem.program)).then(() => {
+
+        });
+    }, [dispatch])
 
     //Fonction de gestion du timer
     const handleInterval = () => {
         // clear de l'interval initial si présent
         clearInterval(intervalRef.current);
-        console.log(`handleInterval -> intervalRef.current`, intervalRef.current)
         intervalRef.current = setInterval(() => {
             // Si playerRef existe on appelle sa méthode getCurrentTime
             playerRef.current?.getCurrentTime().then((currentTime) => {
                 playerRef.current?.getDuration().then((duration) => {
 
                     setDuration(Math.round((duration - currentTime) / 60))
-                    console.log(Math.round((duration - currentTime) / 60))
                 })
             })
 
@@ -115,7 +144,12 @@ export default function Player({ route }) {
                 <Icon
                     name='play-skip-forward-outline'
                     type='ionicon'
-                    // onPress={test}
+                    onPress={() => {
+                        navigation.replace('Player', {
+                            item: nextProgram
+                        })
+                    }}
+                    disabled={myItem.order === subPrograms.length ? true : false}
                     iconStyle={styles.video_button}
                 />
 
@@ -148,3 +182,5 @@ const styles = StyleSheet.create({
 
 
 })
+
+export default connect(mapStateToProps)(Player);

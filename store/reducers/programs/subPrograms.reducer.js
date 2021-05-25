@@ -1,6 +1,6 @@
-import { GET_SUBPROGRAMS } from './../../actions'
+import { GET_SUBPROGRAMS, GET_NEXT_ITEM } from './../../actions'
 
-const initialState = { subPrograms: [] };
+const initialState = { subPrograms: [], nextProgram: {} };
 
 const subprogramsReducer = (state = initialState, action) => {
     let nextState;
@@ -13,6 +13,13 @@ const subprogramsReducer = (state = initialState, action) => {
             }
             return nextState || state
 
+
+        case GET_NEXT_ITEM:
+            nextState = {
+                ...state,
+                nextProgram: action.payload
+            }
+            return nextState || state
         default:
             return state
     }

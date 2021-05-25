@@ -32,3 +32,24 @@ export const getSubPrograms = (id) => dispatch =>
             )
         })
     })
+
+
+
+
+export const GET_NEXT_ITEM = "[SUB_PROGRAMS] GET NEXT ITEM";
+
+export const getNextItem = (id, order) => dispatch =>
+    new Promise((resolve, reject) => {
+        const request = axios.get(`${HOST_IP}/api/sous-programmes/next-video`, {
+            params: { parentId: id, order: order }
+        })
+        request.then(response => {
+            resolve(
+                dispatch({
+                    type: GET_NEXT_ITEM,
+                    payload: response.data
+                })
+            )
+        })
+    })
+
