@@ -8,21 +8,58 @@ export default function Player({ route }) {
     let myItem = route.params.item;
 
     const playerRef = useRef();
-    // console.log(`Player -> playerRef`, playerRef)
+    // console.log(`Player -> playerRef`, playerRref)
 
     // console.log(`useRef`, playerRef)
-    const [duration, setDuration] = useState(0);
+    const [duration, setDuration] = useState(myItem.duration_indicator / 60);
 
     const [playing, setPlaying] = useState(false);
 
-    //TODO v--Utiliser cette methode pour gérer l'affichage du temps - lecture video ... 
-    const onStateChange = useCallback((state) => {
-        // console.log(`onStateChange -> state`, state)
+    // on expose notre interval à l'ensemble de notre composant
+    const intervalRef = useRef(null)
+
+    //Fonction de gestion du timer
+    const handleInterval = () => {
+        // clear de l'interval initial si présent
+        clearInterval(intervalRef.current);
+        console.log(`handleInterval -> intervalRef.current`, intervalRef.current)
+        intervalRef.current = setInterval(() => {
+            // Si playerRef existe on appelle sa méthode getCurrentTime
+            playerRef.current?.getCurrentTime().then((currentTime) => {
+                playerRef.current?.getDuration().then((duration) => {
+
+                    setDuration(Math.round((duration - currentTime) / 60))
+                    console.log(Math.round((duration - currentTime) / 60))
+                })
+            })
+
+        }, 1000)
+    }
+
+
+    // Gestion des changements d'états
+    const onStateChange = (state) => {
+
+        // Quand la vidéo est lancé
+        if (state === 'playing') {
+            setPlaying(true);
+            // je déclenche mon interval
+            handleInterval();
+
+        }
+        if (state === 'paused') {
+            setPlaying(false);
+            // stop de l'interval
+            clearInterval(intervalRef.current)
+        }
+
         if (state === "ended") {
             setPlaying(false);
-            Alert.alert("video has finished playing!");
+            clearInterval(intervalRef.current)
         }
-    }, []);
+
+    };
+
 
     const togglePlaying = useCallback(() => {
         setPlaying((prev) => !prev);
@@ -31,20 +68,6 @@ export default function Player({ route }) {
     const restartPlaying = () => {
         playerRef.current.seekTo(0, true);
     }
-
-    // useEffect(() => {
-
-    //     const interval = setInterval(() => {
-
-    //         playerRef.current.getCurrentTime().then((data) => {
-    //             console.log(Math.round(data / 60))
-    //         })
-    //         // setDuration(playerRef.current.getCurrentTime().then((data) => console.log(Math.round(data / 60))))
-    //     }, 1000);
-    //     return () => {
-    //         clearInterval(interval)
-    //     }
-    // }, [])
 
     return (
         <SafeAreaView>
@@ -69,7 +92,6 @@ export default function Player({ route }) {
                     type='ionicon'
                     onPress={restartPlaying}
                     iconStyle={styles.video_button}
-
                 />
                 {playing
                     ? (<Icon
@@ -98,7 +120,7 @@ export default function Player({ route }) {
                 />
 
             </View>
-            <Text>{/* duration */}m</Text>
+            <Text>Temps restant {duration} min</Text>
 
         </SafeAreaView >
     )
