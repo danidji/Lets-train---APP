@@ -5,7 +5,7 @@ import { Icon } from 'react-native-elements';
 
 //Import redux
 import { connect, useDispatch, useSelector } from "react-redux"
-import { getSubPrograms, getNextItem } from '../store/actions';
+import { getNextItem } from '../store/actions';
 
 //init variable de connection redux
 const mapStateToProps = (state) => {
@@ -28,9 +28,6 @@ function Player({ route, navigation }) {
         ({ subprogramsReducer }) => subprogramsReducer.nextProgram
     );
 
-    const subPrograms = useSelector(
-        ({ subprogramsReducer }) => subprogramsReducer.subPrograms
-    );
 
     //Hooks init 
     const [duration, setDuration] = useState(myItem.duration_indicator / 60);
@@ -43,17 +40,14 @@ function Player({ route, navigation }) {
         })
     }, [dispatch])
 
-    useEffect(() => {
-        dispatch(getSubPrograms(myItem.program)).then(() => {
-
-        });
-    }, [dispatch])
 
     //Fonction de gestion du timer
     const handleInterval = () => {
         // clear de l'interval initial si présent
         clearInterval(intervalRef.current);
         intervalRef.current = setInterval(() => {
+
+
             // Si playerRef existe on appelle sa méthode getCurrentTime
             playerRef.current?.getCurrentTime().then((currentTime) => {
                 playerRef.current?.getDuration().then((duration) => {
@@ -68,6 +62,7 @@ function Player({ route, navigation }) {
 
     // Gestion des changements d'états
     const onStateChange = (state) => {
+        console.log(`onStateChange -> state`, state)
 
         // Quand la vidéo est lancé
         if (state === 'playing') {
@@ -99,15 +94,15 @@ function Player({ route, navigation }) {
     }
 
     return (
-        <SafeAreaView>
-            <Text style={styles.title}>
+        <SafeAreaView style={styles.main_container}>
+            <View style={styles.header}>
                 <Icon
                     name='logo-youtube'
                     type='ionicon'
                 />
 
-                {myItem.title}
-            </Text>
+                <Text style={styles.title}>{myItem.title}</Text>
+            </View>
             <YoutubePlayer
                 height={300}
                 play={playing}
@@ -149,35 +144,60 @@ function Player({ route, navigation }) {
                             item: nextProgram
                         })
                     }}
-                    disabled={myItem.order === subPrograms.length ? true : false}
+                    disabled={nextProgram ? false : true}
                     iconStyle={styles.video_button}
                 />
 
             </View>
-            <Text>Temps restant {duration} min</Text>
+            <View style={styles.duration}>
+
+
+                <Text style={styles.text_duration}> Temps restant <Text style={duration <= 3 ? { ...styles.time, color: 'red' } : styles.time}>{duration}</Text> min</Text>
+            </View>
 
         </SafeAreaView >
     )
 }
 
 const styles = StyleSheet.create({
+    main_container: {
+        flex: 1
+    },
     player_button: {
         flexDirection: "row"
         , justifyContent: "center"
+        , alignItems: "center"
+    },
+    header: {
+        flexDirection: 'row'
+        , justifyContent: 'center'
+        , alignItems: 'center'
+        , paddingVertical: 10
+
     },
     title: {
         fontSize: 20
-        , alignSelf: "center"
+        , marginLeft: 10
     },
     play_pause: {
-        marginHorizontal: 20
+        marginHorizontal: 30
+        , fontSize: 50
         , color: '#3880FF'
     },
     video_button: {
-        color: '#3880FF'
+        fontSize: 35
     },
     duration: {
-        alignSelf: "flex-end"
+        alignSelf: "center",
+        position: "absolute"
+        , bottom: 10
+    },
+    text_duration: {
+        fontSize: 25
+    },
+    time: {
+        fontWeight: "bold"
+        , fontSize: 30
     }
 
 
