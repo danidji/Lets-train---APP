@@ -7,10 +7,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import Home from './navigation/Home';
 import Historic from './navigation/Historic';
 import Account from './navigation/Account';
+import Login from './navigation/Login'
+import Register from './navigation/Register'
+
+
 // chargement des screens-components
 import Program from './navigation/Program'
 import Player from './navigation/Player'
-
 import Tabs from './navigation/Tabs'
 
 // doc stack => https://reactnavigation.org/docs/stack-navigator/
@@ -62,14 +65,42 @@ export default function AppIntermediate() {
     )
   }
 
+  const AuthNavigator = () => {
+    return (
+      <Stack.Navigator
+        // headerMode="none"
+        initialRouteName="Connexion"
+      // screenOptions={{
+      //   headerShown: false, //supprime la barre du header
+      // }}
+      >
+        <Stack.Screen
+          name="Connexion"
+
+        >
+          {(props) => <Login{...props} />}
+        </Stack.Screen>
+
+        <Stack.Screen
+          name="Enregistrement"
+        >
+          {(props) => <Register{...props} />}
+        </Stack.Screen>
+      </Stack.Navigator>
+    )
+  }
+
 
   return (
+    // <NavigationContainer>
+    //   <Tabs
+    //     HomeNavigator={HomeNavigator}
+    //     HistoricNavigator={HistoricNavigator}
+    //     AccountNavigator={AccountNavigator}
+    //   />
+    // </NavigationContainer>
     <NavigationContainer>
-      <Tabs
-        HomeNavigator={HomeNavigator}
-        HistoricNavigator={HistoricNavigator}
-        AccountNavigator={AccountNavigator}
-      />
+      <AuthNavigator />
     </NavigationContainer>
 
 
