@@ -29,18 +29,24 @@ const getIcons = (level) => {
     }
     return icon
 }
-// initialisation de la variable de connection à redux 
+// initialisation de la variable de connection à redux => expose les états au props
 const mapStateToProps = (state) => {
     return state;
 }
 
 function Home(props) {
+    // console.log(`Home -> props`, props)
     const { route, navigation } = props;
 
     const dispatch = useDispatch();
     const programmes = useSelector(
         ({ programsReducer }) => programsReducer.programs
-    ); // permet de selectionner le réducteurs qui m'intéresse
+    ); // permet de selectionner le réducteur qui m'intéresse
+
+
+    //On peut aussi ecrire : 
+    // const programmes = props.programsReducer.programs
+
 
     //A l'affichage on appelle la fonction getPrograms
     useEffect(() => {
@@ -122,3 +128,5 @@ const styles = StyleSheet.create({
 
 
 export default connect(mapStateToProps)(Home); // on exporte la fonction home avec les méthodes lié à notre store redux
+
+// on peut aussi utiliser mapDispatchtoProps en paramètre

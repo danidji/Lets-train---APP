@@ -47,8 +47,7 @@ function Player({ route, navigation }) {
 
     // Exposition des actions dans le dispatch
     useEffect(() => {
-        dispatch(getNextItem(myItem.program, myItem.order + 1)).then((result) => {
-        })
+        dispatch(getNextItem(myItem.program, myItem.order + 1))
     }, [dispatch])
 
 
@@ -57,8 +56,6 @@ function Player({ route, navigation }) {
         // clear de l'interval initial si présent
         clearInterval(intervalRef.current);
         intervalRef.current = setInterval(() => {
-
-
             // Si playerRef existe on appelle sa méthode getCurrentTime
             playerRef.current?.getCurrentTime().then((currentTime) => {
                 playerRef.current?.getDuration().then((duration) => {
