@@ -2,11 +2,6 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack' // => permet d'englober l'ensemble de la navigation - une stack représente un bloc qui va permet de gérer la navigation entre les différents screens
 import { NavigationContainer } from '@react-navigation/native';
 
-import store from "./store";
-
-//Redux 
-import { Provider } from 'react-redux';
-
 
 // chargement des pages
 import Home from './navigation/Home';
@@ -21,7 +16,7 @@ import Tabs from './navigation/Tabs'
 // doc stack => https://reactnavigation.org/docs/stack-navigator/
 const Stack = createStackNavigator();
 
-export default function App() {
+export default function AppIntermediate() {
   const HomeNavigator = () => {
     return (
       <Stack.Navigator>
@@ -69,15 +64,13 @@ export default function App() {
 
 
   return (
-    <Provider store={store}>
-      <NavigationContainer>
-        <Tabs
-          HomeNavigator={HomeNavigator}
-          HistoricNavigator={HistoricNavigator}
-          AccountNavigator={AccountNavigator}
-        />
-      </NavigationContainer>
-    </Provider>
+    <NavigationContainer>
+      <Tabs
+        HomeNavigator={HomeNavigator}
+        HistoricNavigator={HistoricNavigator}
+        AccountNavigator={AccountNavigator}
+      />
+    </NavigationContainer>
 
 
   );
