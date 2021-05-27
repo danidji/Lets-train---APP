@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, SafeAreaView, StyleSheet } from 'react-native';
+import { Text, SafeAreaView, StyleSheet, Image } from 'react-native';
 import { Input, Icon, Button } from 'react-native-elements';
 
 import validator from 'validator';
@@ -19,7 +19,64 @@ export default function Register({ route, navigation }) {
         , verifPass: ""
     });
 
-    // console.log(`const[register,setRegister]=useState -> register`, register)
+
+    const onClick = () => {
+
+
+        console.log(register)
+        // v Appel de la fonction pour renvoyer les infos au back
+
+    }
+
+    const onChange = (value, type) => {
+        //réinitialisation des messages d'erreur
+        setErrors({ ...errors, email: "", password: "", verifPass: "" });
+
+        //gestion des mails
+        if (type === "email") {
+            setRegister((register) => ({ ...register, email: value }))
+
+            // console.log(register);
+            if (!validator.isEmail(value)) {
+                setErrors({ ...errors, email: "Veuillez saisir un email valide" })
+            } else {
+                setErrors({ ...errors, email: "" })
+            }
+
+        }
+
+        //gestion des mots de passe
+        if (type === "password") {
+            setRegister((register) => ({ ...register, password: value }))
+            if (!validator.isStrongPassword(value, { minLength: 6, minSymbols: 0 })) {
+                setErrors({ ...errors, password: "Saisir un mot de passe avec : 6 caractères min, au moins 1 majuscule et un 1 chiffre" })
+                if (register.verifPass && value !== register.verifPass) {
+                    setErrors({ ...errors, password: "Les mots de passe doivent être identique" })
+                }
+            } else {
+                setErrors({ ...errors, password: "" })
+            }
+        }
+
+        //Gestion de la vérification de mot de passe 
+        if (type === "verifPass") {
+            setRegister((register) => ({ ...register, verifPass: value }))
+            if (register.password !== value) {
+                setErrors({ ...errors, verifPass: "Les mots de passe doivent être identique" })
+            } else {
+                setErrors({ ...errors, verifPass: "" })
+            }
+        }
+    }
+
+    // Activation du bouton que si il n'y a pas d'erreur
+    const disabledButton = () => {
+        let disabled = true
+        if (!errors.email && !errors.password && !errors.verifPass && !validator.isEmpty(register.email) && !validator.isEmpty(register.password) && !validator.isEmpty(register.verifPass)) {
+            disabled = false
+        }
+        return disabled
+    }
 
     const toRegister = () => {
         navigation.navigate("Connexion")
@@ -28,33 +85,22 @@ export default function Register({ route, navigation }) {
     const hidePassword = () => {
         setRegister((register) => ({ ...register, hidePassword: !register.hidePassword }))
     }
-    const onClick = () => {
-        if (!validator.isEmail(register.email) || validator.isEmpty(register.email)) {
-            setErrors({ ...errors, email: "Veuillez saisir un email valide" })
-        }
-
-        if (validator.isStrongPassword(register.password, { minLength: 6, minSymbols: 0 }) || validator.isEmpty(register.email)) {
-            setErrors({ ...errors, password: "Saisir un mot de passe avec : 6 caractères min, au moins 1 majuscule et un 1 chiffre" })
-        }
-
-        if (register.password !== register.verifPass) {
-            setErrors({ ...errors, verifPass: "Les mots de passe doivent être identique" })
-        }
-
-        // v Appel de la fonction pour renvoyer les infos au back
-
-
-    }
 
     return (
         <SafeAreaView style={styles.main_container}>
-            <Text>S'inscrire</Text>
+
+            <Image
+                source={require('../assets/Icon3.png')}
+                style={styles.image}
+            />
+
+            <Text style={styles.title}>inscrivez vous</Text>
 
             <Input
                 placeholder="Adresse email"
                 leftIcon={{ type: 'ionicon', name: 'mail-outline' }}
                 textContentType="emailAddress"
-                onChangeText={value => setRegister({ ...register, email: value })}
+                onChangeText={value => onChange(value, "email")}
                 spellCheck={false}
                 autoCorrect={false}
                 keyboardType="email-address"
@@ -72,7 +118,7 @@ export default function Register({ route, navigation }) {
                         onPress={hidePassword}
                     />
                 }
-                onChangeText={value => setRegister({ ...register, password: value })}
+                onChangeText={value => onChange(value, "password")}
                 errorMessage={errors.password}
             />
             <Input
@@ -87,13 +133,15 @@ export default function Register({ route, navigation }) {
                         onPress={hidePassword}
                     />
                 }
-                onChangeText={value => setRegister({ ...register, verifPass: value })}
+                onChangeText={value => onChange(value, "verifPass")}
                 errorMessage={errors.verifPass}
             />
 
             <Button
                 title="Inscription"
+                disabled={disabledButton()}
                 onPress={onClick}
+                buttonStyle={styles.button}
             />
             <Button
                 title="Se connecter"
@@ -106,9 +154,29 @@ export default function Register({ route, navigation }) {
 
 const styles = StyleSheet.create({
     main_container: {
-        flex: 1 // prends la largeur total de la colonne => flexDirection par défaut en colonne
-        , padding: 10
+        flex: 1
+        , padding: 20
         // , alignItems: "center"
         , justifyContent: "center"
+    },
+    image: {
+        width: 200
+        , height: 200
+        , alignSelf: "center"
+        // , position: "absolute"
+        // , top: 15
+    },
+    title: {
+        alignSelf: "center"
+        , fontSize: 20
+        , textTransform: "uppercase"
+        , marginVertical: 20
+
+    },
+    button: {
+        marginVertical: 20
+        , paddingVertical: 10
     }
+
+
 })

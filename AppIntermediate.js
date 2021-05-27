@@ -70,21 +70,21 @@ export default function AppIntermediate() {
       <Stack.Navigator
         // headerMode="none"
         initialRouteName="Connexion"
-      // screenOptions={{
-      //   headerShown: false, //supprime la barre du header
-      // }}
+        screenOptions={{
+          headerShown: false, //supprime la barre du header
+        }}
       >
         <Stack.Screen
           name="Connexion"
 
         >
-          {(props) => <Login{...props} />}
+          {(props) => <Login {...props} />}
         </Stack.Screen>
 
         <Stack.Screen
           name="Enregistrement"
         >
-          {(props) => <Register{...props} />}
+          {(props) => <Register {...props} />}
         </Stack.Screen>
       </Stack.Navigator>
     )
