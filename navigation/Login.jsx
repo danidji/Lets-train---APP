@@ -7,7 +7,7 @@ import { login } from "./../store/actions"
 import validator from 'validator';
 
 
-
+// Mise à disposition dans les props des méthodes du dispatch
 const mapDispatchToProps = (dispatch) => {
     return {
         onLogin: (user) => {
@@ -38,14 +38,8 @@ const Login = (props) => {
     });
 
 
-
-    const onClick = () => {
-
-        setErrors({ ...errors, email: null, password: null });
-
-        // v Appel de la fonction pour renvoyer les infos au back
-    }
-
+    // Methode qui récupère les données mise à dispo dans les props grace au dispatch
+    // - > sera éxécuter au click sur le bouton valider
     const onLogin = () => {
         setLogin({ ...login, loading: true });
 
@@ -54,6 +48,7 @@ const Login = (props) => {
                 email: login.email
                 , password: login.password
             }
+            //     v - on récupère soit les données user (sans le mdp) soit les messages d'erreurs
         }).then((data) => {
             console.log(data)
         })
@@ -223,4 +218,13 @@ export default connect(null, mapDispatchToProps)(Login) // connect(mapStateToPro
  *  - rajouter un icon une fois que la valeur saisie correspond à une valeur attendu (✔️) => spécifier au user que ce qu'il a saisi est correct
  *  - envoyer une des valeurs saisie dans le navigate vers la page register pour préremplir le formulaire
  *          -> (l'utilisateur a voulu se connecter mais n'as pas de compte, il va donc vers la page d'enregistrement avec le formulaire préremplie)
+ */
+
+
+/**
+ * NOTE - fonctionnement redux
+ *  - le stateToProps met à dispo les données du state dans les props
+ *  - le dispatchToProps mets à dispo les méthodes avec des promesses dans les props
+ *  ==> Y a t'il des conditions précises pour utiliser l'un ou l'autre ? cela revient il au même ?
+ *
  */
