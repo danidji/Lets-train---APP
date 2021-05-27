@@ -90,10 +90,10 @@ export default function Register({ route, navigation }) {
 
     const keyboardState = (etat) => {
         if (etat === "show") {
-            setRegister({ ...register, keyboardShow: true })
+            setRegister((register) => ({ ...register, keyboardShow: true }))
         }
         if (etat === "hide") {
-            setRegister({ ...register, keyboardShow: false })
+            setRegister((register) => ({ ...register, keyboardShow: false }))
         }
     }
 

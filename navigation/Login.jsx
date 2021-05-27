@@ -1,18 +1,36 @@
-import { setStatusBarNetworkActivityIndicatorVisible } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
 import { Text, SafeAreaView, StyleSheet, Image, Keyboard } from 'react-native';
 import { Input, Button, Icon } from 'react-native-elements';
+import { connect } from 'react-redux';
+import { login } from "./../store/actions"
 
 import validator from 'validator';
 
-export default function Login({ route, navigation }) {
 
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onLogin: (user) => {
+            return new Promise((resolve, reject) => {
+                dispatch(login(user)).then((data) => {
+                    resolve(data);
+                })
+            })
+        }
+    }
+}
+
+const Login = (props) => {
+
+
+    const { route, navigation } = props;
 
     const [login, setLogin] = useState({
         email: ""
         , password: ""
         , hidePassword: true
         , keyboardShow: false
+        , loading: false
     });
     const [errors, setErrors] = useState({
         email: null
@@ -27,6 +45,21 @@ export default function Login({ route, navigation }) {
 
         // v Appel de la fonction pour renvoyer les infos au back
     }
+
+    const onLogin = () => {
+        setLogin({ ...login, loading: true });
+
+        props.onLogin({
+            user: {
+                email: login.email
+                , password: login.password
+            }
+        }).then((data) => {
+            console.log(data)
+        })
+    }
+
+
 
     const onChange = (value, type) => {
         //réinitialisation des messages d'erreur
@@ -74,10 +107,10 @@ export default function Login({ route, navigation }) {
     // Mise à jours de l'état à l'apparition et disparition du clavier
     const keyboardState = (etat) => {
         if (etat === "show") {
-            setLogin({ ...login, keyboardShow: true })
+            setLogin((login) => ({ ...login, keyboardShow: true }))
         }
         if (etat === "hide") {
-            setLogin({ ...login, keyboardShow: false })
+            setLogin((login) => ({ ...login, keyboardShow: false }))
         }
     }
 
@@ -134,10 +167,10 @@ export default function Login({ route, navigation }) {
 
             <Button
                 title="Connexion"
-                onPress={onClick}
+                onPress={onClick} // on va jouer la méthode onLogin
                 disabled={disabledButton()}
                 buttonStyle={styles.button}
-            // loading
+                loading={login.loading}
             />
             <Button
                 title="S'inscrire"
@@ -177,6 +210,10 @@ const styles = StyleSheet.create({
 
 
 })
+
+export default connect(null, mapDispatchToProps)(Login) // connect(mapStateToProps, mapDispatchToProps)
+
+
 
 /**
  * NOTE - expériences utilisateurs à rajouter/penser
