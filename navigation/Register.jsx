@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Text, SafeAreaView, StyleSheet, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Text, SafeAreaView, StyleSheet, Image, Keyboard } from 'react-native';
 import { Input, Icon, Button } from 'react-native-elements';
 
 import validator from 'validator';
@@ -11,6 +11,7 @@ export default function Register({ route, navigation }) {
         , password: ""
         , verifPass: ""
         , hidePassword: true
+        , keyboardShow: false
     })
 
     const [errors, setErrors] = useState({
@@ -86,13 +87,40 @@ export default function Register({ route, navigation }) {
         setRegister((register) => ({ ...register, hidePassword: !register.hidePassword }))
     }
 
+
+    const keyboardState = (etat) => {
+        if (etat === "show") {
+            setRegister({ ...register, keyboardShow: true })
+        }
+        if (etat === "hide") {
+            setRegister({ ...register, keyboardShow: false })
+        }
+    }
+
+
+    useEffect(() => {
+        Keyboard.addListener('keyboardDidShow', () => keyboardState('show'));
+        Keyboard.addListener('keyboardDidHide', () => keyboardState('hide'));
+
+
+
+        return () => {
+            Keyboard.removeListener('keyboardDidShow', () => keyboardState('show'));
+            Keyboard.removeListener('keyboardDidHide', () => keyboardState('hide'));
+        }
+
+    }, [])
+
+
     return (
         <SafeAreaView style={styles.main_container}>
 
-            <Image
-                source={require('../assets/Icon3.png')}
-                style={styles.image}
-            />
+            {!register.keyboardShow &&
+                <Image
+                    source={require('../assets/Icon3.png')}
+                    style={styles.image}
+                />
+            }
 
             <Text style={styles.title}>inscrivez vous</Text>
 

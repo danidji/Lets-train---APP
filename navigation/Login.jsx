@@ -1,3 +1,4 @@
+import { setStatusBarNetworkActivityIndicatorVisible } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
 import { Text, SafeAreaView, StyleSheet, Image, Keyboard } from 'react-native';
 import { Input, Button, Icon } from 'react-native-elements';
@@ -11,26 +12,14 @@ export default function Login({ route, navigation }) {
         email: ""
         , password: ""
         , hidePassword: true
-        , showImage: true
+        , keyboardShow: false
     });
     const [errors, setErrors] = useState({
         email: null
         , password: null
     });
 
-    // useEffect(() => {
-    //     Keyboard.addListener('keyboardDidShow', setLogin((login) => ({ ...login, showImage: !login.showImage })));
-    //     Keyboard.addListener('keyboardDidHide', setLogin((login) => ({ ...login, showImage: !login.showImage })));
 
-
-    //     console.log(login.showImage)
-
-    //     return () => {
-    //         Keyboard.removeListener('keyboardDidShow', setLogin((login) => ({ ...login, showImage: !login.showImage })));
-    //         Keyboard.removeListener('keyboardDidHide', setLogin((login) => ({ ...login, showImage: !login.showImage })));
-    //     }
-
-    // }, [])
 
     const onClick = () => {
 
@@ -82,9 +71,32 @@ export default function Login({ route, navigation }) {
         setLogin((login) => ({ ...login, hidePassword: !login.hidePassword }))
     }
 
+    // Mise à jours de l'état à l'apparition et disparition du clavier
+    const keyboardState = (etat) => {
+        if (etat === "show") {
+            setLogin({ ...login, keyboardShow: true })
+        }
+        if (etat === "hide") {
+            setLogin({ ...login, keyboardShow: false })
+        }
+    }
+
+    useEffect(() => {
+        Keyboard.addListener('keyboardDidShow', () => keyboardState('show'));
+        Keyboard.addListener('keyboardDidHide', () => keyboardState('hide'));
+
+
+
+        return () => {
+            Keyboard.removeListener('keyboardDidShow', () => keyboardState('show'));
+            Keyboard.removeListener('keyboardDidHide', () => keyboardState('hide'));
+        }
+
+    }, [])
+
     return (
         <SafeAreaView style={styles.main_container}>
-            {login.showImage &&
+            {!login.keyboardShow &&
                 <Image
                     source={require('../assets/Icon3.png')}
                     style={styles.image}
@@ -125,6 +137,7 @@ export default function Login({ route, navigation }) {
                 onPress={onClick}
                 disabled={disabledButton()}
                 buttonStyle={styles.button}
+            // loading
             />
             <Button
                 title="S'inscrire"
@@ -164,3 +177,13 @@ const styles = StyleSheet.create({
 
 
 })
+
+/**
+ * NOTE - expériences utilisateurs à rajouter/penser
+ *  - rediriger vers la page de connexion une fois l'enregistrement réussi
+ *  - si label + placeholder : mettre le format de la saisie attendu dans le placeholder
+ *  - props spellCheck={false} => pour un input text
+ *  - rajouter un icon une fois que la valeur saisie correspond à une valeur attendu (✔️) => spécifier au user que ce qu'il a saisi est correct
+ *  - envoyer une des valeurs saisie dans le navigate vers la page register pour préremplir le formulaire
+ *          -> (l'utilisateur a voulu se connecter mais n'as pas de compte, il va donc vers la page d'enregistrement avec le formulaire préremplie)
+ */
