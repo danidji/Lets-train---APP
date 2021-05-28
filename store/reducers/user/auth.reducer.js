@@ -1,8 +1,9 @@
-import { LOGIN_USER } from './../../actions'
+import { LOGIN_USER, REGISTER_USER } from './../../actions'
 // Initialisation du modèle de données dans un état
 const initialState = {
     data: {
         user: {},
+        access_token: null,
         errors: {
             email: null,           // => reprend les même noms d'erreurs pour que les erreurs générer en back, soit disponible en front
             password: null,
@@ -21,6 +22,15 @@ const authReducer = (state = initialState, action) => {
                 data: action.payload
             }
             return nextState || state
+
+
+        case REGISTER_USER:
+            nextState = {
+                ...state,
+                data: action.payload
+            }
+            return nextState || state
+
 
         default:
             // les données sont mise à dispo dans un état
