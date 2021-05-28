@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Text, SafeAreaView, StyleSheet, Image, Keyboard } from 'react-native';
 import { Input, Button, Icon } from 'react-native-elements';
-
+import * as SecureStore from "expo-secure-store";
 
 import { connect } from 'react-redux';
-import { login } from "../store/actions"
+import { login, userLogged } from "../store/actions"
 
 import validator from 'validator';
 
@@ -18,6 +18,9 @@ const mapDispatchToProps = (dispatch) => {
                     resolve(data);
                 })
             })
+        },
+        userLogged: (user) => {
+            dispatch(userLogged(user));
         }
     }
 }
@@ -39,6 +42,8 @@ const Login = (props) => {
         , password: null
     });
 
+    const { fromRegister } = route.params ? route.params : false; // Est ce qu'on vient de la page Register ou non
+
 
     // Methode qui récupère les données mise à dispo dans les props grace au dispatch
     // - > sera éxécuter au click sur le bouton valider
@@ -55,7 +60,21 @@ const Login = (props) => {
             //Si j'ai des erreurs dans mon retour de back, alors je les envoi à mon état login pour les afficher 
             if (data.payload.errors) {
                 setErrors(data.payload.errors);
+                setLogin({ ...login, loading: false }); // on arrête le loading
+            } else {
+                //on stocke le token retourné par le back dans le secure store de l'appareil
+                SecureStore.setItemAsync(
+                    "jwt_token",
+                    data.payload.data.access_token
+                ).then(() => {
+                    //Si on a bien un utilisateur dans le retour du back ....
+                    if (data.payload.data.user) {
+                        props.userLogged(data.payload.user);
+                    }
+                })
             }
+
+
         })
     }
 
@@ -119,9 +138,14 @@ const Login = (props) => {
 
 
 
-        return () => {
+        return () => { // Action que se réalise au déchargement de la page
             Keyboard.removeListener('keyboardDidShow', () => keyboardState('show'));
             Keyboard.removeListener('keyboardDidHide', () => keyboardState('hide'));
+
+            // Clean des états au cas où ils n'auront pas tous été fait
+            // -> Ici ce n'est pas forcément utile mais si besoin on le fait ici
+            setErrors({});
+            setLogin({ ...login, loading: false });
         }
 
     }, [])
@@ -230,5 +254,6 @@ export default connect(null, mapDispatchToProps)(Login); // connect(mapStateToPr
  *  - le stateToProps met à dispo les données du state dans les props
  *  - le dispatchToProps mets à dispo les méthodes avec des promesses dans les props
  *  ==> Y a t'il des conditions précises pour utiliser l'un ou l'autre ? cela revient il au même ?
+ *  ====> pas de différence entre les deux, ce sont juste 2 facons différentes de faire la même chose
  *
  */
