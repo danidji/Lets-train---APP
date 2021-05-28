@@ -2,9 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { Text, SafeAreaView, StyleSheet, Image, Keyboard } from 'react-native';
 import { Input, Icon, Button } from 'react-native-elements';
 
+
+import { connect, useDispatch } from 'react-redux';
+import { registerUser } from "./../store/actions";
+
+
 import validator from 'validator';
 
-export default function Register({ route, navigation }) {
+function Register(props) {
+
+    const { route, navigation } = props
+
+    const dispatch = useDispatch();
 
     const [register, setRegister] = useState({
         email: ""
@@ -21,13 +30,36 @@ export default function Register({ route, navigation }) {
     });
 
 
-    const onClick = () => {
+    const onRegister = () => {
+        setRegister({ ...register, loading: true });
 
+        dispatch(registerUser({
+            user: {
+                email: register.email
+                , password: register.password
+                , verifPass: register.verifPass
+            }
+        }))
+            .then((data) => {
+                console.log(`.then -> data`, data)
 
-        console.log(register)
-        // v Appel de la fonction pour renvoyer les infos au back
+                //si on décidait de connecter l'utilisateur au retour de promesse, on aurait pu utilise le data.payload.data.user, pour enregistrer l'utilisateur dans le state redux
 
+                setRegister({ ...register, loading: false });
+                if (data.payload.errors) {
+
+                    setErrors(data.payload.errors);
+                } else {
+                    navigation.navigate("Connexion", {
+                        fromRegister: true,
+                    });
+
+                }
+
+            })
     }
+
+
 
     const onChange = (value, type) => {
         //réinitialisation des messages d'erreur
@@ -168,7 +200,7 @@ export default function Register({ route, navigation }) {
             <Button
                 title="Inscription"
                 disabled={disabledButton()}
-                onPress={onClick}
+                onPress={onRegister}
                 buttonStyle={styles.button}
             />
             <Button
@@ -208,3 +240,5 @@ const styles = StyleSheet.create({
 
 
 })
+
+export default connect()(Register);

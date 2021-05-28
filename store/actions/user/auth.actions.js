@@ -23,7 +23,7 @@ export const REGISTER_USER = "[AUTH] REGISTER USER";
 
 
 // methode sans mapDispatchtoProps / avec useDispatch
-export const register = (data) => dispatch =>
+export const registerUser = (data) => dispatch =>
     new Promise((resolve, reject) => {
         const request = axios.post(`${HOST_IP}/api/user/register`, {
             params: { user: data.user }
