@@ -9,10 +9,10 @@ export function login(data) {
         params: { user: data.user }
     })
     return (dispatch) =>
-        request.then((response) => {
+        request.then((response) => // équivalent d'un return
             dispatch({
                 type: LOGIN_USER
                 , payload: response.data
             })
-        })
+        )
 }

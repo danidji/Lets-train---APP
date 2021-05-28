@@ -3,7 +3,7 @@ import { LOGIN_USER } from './../../actions'
 const initialState = {
     data: {
         user: {},
-        error: {
+        errors: {
             email: null,           // => reprend les même noms d'erreurs pour que les erreurs générer en back, soit disponible en front
             password: null,
             verifPass: null

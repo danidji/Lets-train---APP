@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Text, SafeAreaView, StyleSheet, Image, Keyboard } from 'react-native';
 import { Input, Button, Icon } from 'react-native-elements';
+
+
 import { connect } from 'react-redux';
-import { login } from "./../store/actions"
+import { login } from "../store/actions"
 
 import validator from 'validator';
 
@@ -50,7 +52,10 @@ const Login = (props) => {
             }
             //     v - on récupère soit les données user (sans le mdp) soit les messages d'erreurs
         }).then((data) => {
-            console.log(data)
+            //Si j'ai des erreurs dans mon retour de back, alors je les envoi à mon état login pour les afficher 
+            if (data.payload.errors) {
+                setErrors(data.payload.errors);
+            }
         })
     }
 
@@ -64,8 +69,7 @@ const Login = (props) => {
         if (type === "email") {
             setLogin((login) => ({ ...login, email: value }))
 
-            // console.log(login);
-            if (!validator.isEmail(value) /* || validator.isEmpty(login.email) */) {
+            if (!validator.isEmail(value)) {
                 setErrors((errors) => ({ ...errors, email: "Veuillez saisir un email valide" }))
             }
 
@@ -162,7 +166,7 @@ const Login = (props) => {
 
             <Button
                 title="Connexion"
-                onPress={onClick} // on va jouer la méthode onLogin
+                onPress={onLogin}
                 disabled={disabledButton()}
                 buttonStyle={styles.button}
                 loading={login.loading}
@@ -206,7 +210,7 @@ const styles = StyleSheet.create({
 
 })
 
-export default connect(null, mapDispatchToProps)(Login) // connect(mapStateToProps, mapDispatchToProps)
+export default connect(null, mapDispatchToProps)(Login); // connect(mapStateToProps, mapDispatchToProps)
 
 
 
