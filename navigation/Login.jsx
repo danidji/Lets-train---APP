@@ -245,8 +245,6 @@ const styles = StyleSheet.create({
         marginVertical: 20
         , paddingVertical: 10
     }
-
-
 })
 
 export default connect(null, mapDispatchToProps)(Login); // connect(mapStateToProps, mapDispatchToProps)
