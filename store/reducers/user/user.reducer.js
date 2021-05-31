@@ -1,4 +1,4 @@
-import { USER_LOGGED } from './../../actions';
+import { USER_LOGGED, USER_LOGOUT } from './../../actions';
 
 const initialState = {
     user: {}
@@ -9,6 +9,13 @@ const userReducer = (state = initialState, action) => {
 
     switch (action.type) {
         case USER_LOGGED:
+            nextState = {
+                ...state,
+                user: action.payload
+            }
+            return nextState || state
+
+        case USER_LOGOUT:
             nextState = {
                 ...state,
                 user: action.payload
