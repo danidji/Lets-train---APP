@@ -29,75 +29,83 @@ function Register(props) {
         , verifPass: ""
     });
 
+    let mounted = true;
+
 
     const onRegister = () => {
-        setRegister({ ...register, loading: true });
 
-        dispatch(registerUser({
-            user: {
-                email: register.email
-                , password: register.password
-                , verifPass: register.verifPass
-            }
-        }))
-            .then((data) => {
-                console.log(`.then -> data`, data)
+        if (mounted) {
+            setRegister({ ...register, loading: true });
 
-                //si on décidait de connecter l'utilisateur au retour de promesse, on aurait pu utilise le data.payload.data.user, pour enregistrer l'utilisateur dans le state redux
-
-                setRegister({ ...register, loading: false });
-                if (data.payload.errors) {
-
-                    setErrors(data.payload.errors);
-                } else {
-                    navigation.navigate("Connexion", {
-                        fromRegister: true,
-                    });
-
+            dispatch(registerUser({
+                user: {
+                    email: register.email
+                    , password: register.password
+                    , verifPass: register.verifPass
                 }
+            }))
+                .then((data) => {
+                    // console.log(`.then -> data`, data)
 
-            })
+                    //si on décidait de connecter l'utilisateur au retour de promesse, on aurait pu utilise le data.payload.data.user, pour enregistrer l'utilisateur dans le state redux
+
+                    setRegister({ ...register, loading: false });
+                    if (data.payload.errors) {
+
+                        setErrors(data.payload.errors);
+                    } else {
+                        navigation.navigate("Connexion", {
+                            fromRegister: true,
+                        });
+
+                    }
+
+                })
+        }
     }
 
 
 
     const onChange = (value, type) => {
-        //réinitialisation des messages d'erreur
-        setErrors({ ...errors, email: "", password: "", verifPass: "" });
 
-        //gestion des mails
-        if (type === "email") {
-            setRegister((register) => ({ ...register, email: value }))
+        if (mounted) {
+            //réinitialisation des messages d'erreur
+            setErrors({ ...errors, email: "", password: "", verifPass: "" });
 
-            // console.log(register);
-            if (!validator.isEmail(value)) {
-                setErrors({ ...errors, email: "Veuillez saisir un email valide" })
-            } else {
-                setErrors({ ...errors, email: "" })
-            }
+            //gestion des mails
+            if (type === "email") {
+                setRegister((register) => ({ ...register, email: value }))
 
-        }
-
-        //gestion des mots de passe
-        if (type === "password") {
-            setRegister((register) => ({ ...register, password: value }))
-            if (!validator.isStrongPassword(value, { minLength: 6, minSymbols: 0 })) {
-                setErrors({ ...errors, password: "Saisir un mot de passe avec : 6 caractères min, au moins 1 majuscule et un 1 chiffre" })
-                if (register.verifPass && value !== register.verifPass) {
-                    setErrors({ ...errors, password: "Les mots de passe doivent être identique" })
+                // console.log(register);
+                if (!validator.isEmail(value)) {
+                    setErrors({ ...errors, email: "Veuillez saisir un email valide" })
+                } else {
+                    setErrors({ ...errors, email: "" })
                 }
-            } else {
-                setErrors({ ...errors, password: "" })
-            }
-        }
 
-        //Gestion de la vérification de mot de passe 
-        if (type === "verifPass") {
-            setRegister((register) => ({ ...register, verifPass: value }))
-            if (register.password !== value) {
-                setErrors({ ...errors, verifPass: "Les mots de passe doivent être identique" })
-            } else {
-                setErrors({ ...errors, verifPass: "" })
+            }
+
+            //gestion des mots de passe
+            if (type === "password") {
+                setRegister((register) => ({ ...register, password: value }))
+                if (!validator.isStrongPassword(value, { minLength: 6, minSymbols: 0 })) {
+                    setErrors({ ...errors, password: "Saisir un mot de passe avec : 6 caractères min, au moins 1 majuscule et un 1 chiffre" })
+                    if (register.verifPass && value !== register.verifPass) {
+                        setErrors({ ...errors, password: "Les mots de passe doivent être identique" })
+                    }
+                } else {
+                    setErrors({ ...errors, password: "" })
+                }
+            }
+
+            //Gestion de la vérification de mot de passe 
+            if (type === "verifPass") {
+                setRegister((register) => ({ ...register, verifPass: value }))
+                if (register.password !== value) {
+                    setErrors({ ...errors, verifPass: "Les mots de passe doivent être identique" })
+                } else {
+                    setErrors({ ...errors, verifPass: "" })
+                }
             }
         }
     }
@@ -121,11 +129,13 @@ function Register(props) {
 
 
     const keyboardState = (etat) => {
-        if (etat === "show") {
-            setRegister((register) => ({ ...register, keyboardShow: true }))
-        }
-        if (etat === "hide") {
-            setRegister((register) => ({ ...register, keyboardShow: false }))
+        if (mounted) {
+            if (etat === "show") {
+                setRegister((register) => ({ ...register, keyboardShow: true }))
+            }
+            if (etat === "hide") {
+                setRegister((register) => ({ ...register, keyboardShow: false }))
+            }
         }
     }
 
@@ -139,6 +149,7 @@ function Register(props) {
         return () => {
             Keyboard.removeListener('keyboardDidShow', () => keyboardState('show'));
             Keyboard.removeListener('keyboardDidHide', () => keyboardState('hide'));
+            mounted = false;
         }
 
     }, [])
@@ -171,6 +182,8 @@ function Register(props) {
                 leftIcon={{ type: 'ionicon', name: 'lock-closed-outline' }}
                 secureTextEntry={register.hidePassword}
                 textContentType="password"
+                spellCheck={false}
+                autoCorrect={false}
                 rightIcon={
                     <Icon
                         type='ionicon'
@@ -186,6 +199,8 @@ function Register(props) {
                 leftIcon={{ type: 'ionicon', name: 'lock-closed-outline' }}
                 secureTextEntry={register.hidePassword}
                 textContentType="password"
+                spellCheck={false}
+                autoCorrect={false}
                 rightIcon={
                     <Icon
                         type='ionicon'
@@ -241,4 +256,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default connect()(Register);
+export default connect()(Register); // Dans le cas ou on utilise pas de mapStateToProps ni de mapDispatchToProps, le connect n'est pas obligatoire 
