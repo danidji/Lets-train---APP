@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack' // => permet d'englober l'ensemble de la navigation - une stack représente un bloc qui va permet de gérer la navigation entre les différents screens
 import { NavigationContainer } from '@react-navigation/native';
-
+import { useSelector } from 'react-redux';
 
 // chargement des pages
 import Home from './navigation/Home';
@@ -20,6 +20,10 @@ import Tabs from './navigation/Tabs'
 const Stack = createStackNavigator();
 
 export default function AppIntermediate() {
+
+  const user = useSelector(({ userReducer }) => userReducer.user);
+  // console.log(`AppIntermediate -> user`, user)
+
   const HomeNavigator = () => {
     return (
       <Stack.Navigator>
@@ -57,7 +61,7 @@ export default function AppIntermediate() {
     return (
       <Stack.Navigator>
         <Stack.Screen
-          name="Account"
+          name="Compte"
         >
           {(props) => <Account {...props} />}
         </Stack.Screen>
@@ -92,15 +96,35 @@ export default function AppIntermediate() {
 
 
   return (
-    // <NavigationContainer>
-    //   <Tabs
-    //     HomeNavigator={HomeNavigator}
-    //     HistoricNavigator={HistoricNavigator}
-    //     AccountNavigator={AccountNavigator}
-    //   />
-    // </NavigationContainer>
+
+    // <>
+    //   {!user.email
+    //     ? (<NavigationContainer>
+    //       <AuthNavigator />
+    //     </NavigationContainer>)
+    //     : (<NavigationContainer>
+    //       <Tabs
+    //         HomeNavigator={HomeNavigator}
+    //         HistoricNavigator={HistoricNavigator}
+    //         AccountNavigator={AccountNavigator}
+    //       />
+    //     </NavigationContainer>)
+
+
+    //   }
+    // </>
     <NavigationContainer>
-      <AuthNavigator />
+      {!user.email
+        ? (
+          <AuthNavigator />
+        )
+        : (
+          <Tabs
+            HomeNavigator={HomeNavigator}
+            HistoricNavigator={HistoricNavigator}
+            AccountNavigator={AccountNavigator}
+          />)
+      }
     </NavigationContainer>
 
 

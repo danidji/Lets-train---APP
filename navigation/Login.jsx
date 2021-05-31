@@ -47,62 +47,74 @@ const Login = (props) => {
 
     // Methode qui récupère les données mise à dispo dans les props grace au dispatch
     // - > sera éxécuter au click sur le bouton valider
+
+    let mounted = true; // permet d'éviter d'avoir un warning du à l'éxécution des promesses
+
     const onLogin = () => {
-        setLogin({ ...login, loading: true });
 
-        props.onLogin({
-            user: {
-                email: login.email
-                , password: login.password
-            }
-            //     v - on récupère soit les données user (sans le mdp) soit les messages d'erreurs
-        }).then((data) => {
-            //Si j'ai des erreurs dans mon retour de back, alors je les envoi à mon état login pour les afficher 
-            if (data.payload.errors) {
-                setErrors(data.payload.errors);
-                setLogin({ ...login, loading: false }); // on arrête le loading
-            } else {
-                //on stocke le token retourné par le back dans le secure store de l'appareil
-                SecureStore.setItemAsync(
-                    "jwt_token",
-                    data.payload.data.access_token
-                ).then(() => {
-                    //Si on a bien un utilisateur dans le retour du back ....
-                    if (data.payload.data.user) {
-                        props.userLogged(data.payload.user);
-                    }
-                })
-            }
+        if (mounted) {
+
+            setLogin({ ...login, loading: true });
+
+            props.onLogin({
+                user: {
+                    email: login.email
+                    , password: login.password
+                }
+                //     v - on récupère soit les données user (sans le mdp) soit les messages d'erreurs
+            }).then((data) => {
 
 
-        })
+                //Si j'ai des erreurs dans mon retour de back, alors je les envoi à mon état login pour les afficher 
+                if (data.payload.errors.email || data.payload.errors.password) {
+                    setErrors(data.payload.errors);
+                    setLogin({ ...login, loading: false }); // on arrête le loading
+                } else {
+                    //on stocke le token retourné par le back dans le secure store de l'appareil
+                    SecureStore.setItemAsync(
+                        "jwt_token",
+                        data.payload.data.access_token
+                    ).then(() => {
+
+                        //Si on a bien un utilisateur dans le retour du back ....
+                        if (data.payload.data.user) {
+                            // console.log(`onLogin -> data`, data.payload.data.user)
+                            props.userLogged(data.payload.data.user);
+                        }
+                    })
+                }
+
+
+            })
+        }
     }
 
 
 
     const onChange = (value, type) => {
-        //réinitialisation des messages d'erreur
-        setErrors({ ...errors, email: null, password: null });
+        if (mounted) {
+            //réinitialisation des messages d'erreur
+            setErrors({ ...errors, email: null, password: null });
 
-        //gestion des mails
-        if (type === "email") {
-            setLogin((login) => ({ ...login, email: value }))
+            //gestion des mails
+            if (type === "email") {
+                setLogin((login) => ({ ...login, email: value }))
 
-            if (!validator.isEmail(value)) {
-                setErrors((errors) => ({ ...errors, email: "Veuillez saisir un email valide" }))
+                if (!validator.isEmail(value)) {
+                    setErrors((errors) => ({ ...errors, email: "Veuillez saisir un email valide" }))
+                }
+
             }
 
-        }
-
-        //gestion des mots de passe
-        if (type === "password") {
-            setLogin({ ...login, password: value })
-            if (!validator.isLength(value, { min: 6 })) {
-                setErrors({ ...errors, password: "Minimun 6 caractères !" })
+            //gestion des mots de passe
+            if (type === "password") {
+                setLogin({ ...login, password: value })
+                if (!validator.isLength(value, { min: 6 })) {
+                    setErrors({ ...errors, password: "Minimun 6 caractères !" })
+                }
             }
         }
     }
-
 
     // Activation du bouton que si il n'y a pas d'erreur
     const disabledButton = () => {
@@ -124,11 +136,13 @@ const Login = (props) => {
 
     // Mise à jours de l'état à l'apparition et disparition du clavier
     const keyboardState = (etat) => {
-        if (etat === "show") {
-            setLogin((login) => ({ ...login, keyboardShow: true }))
-        }
-        if (etat === "hide") {
-            setLogin((login) => ({ ...login, keyboardShow: false }))
+        if (mounted) {
+            if (etat === "show") {
+                setLogin((login) => ({ ...login, keyboardShow: true }))
+            }
+            if (etat === "hide") {
+                setLogin((login) => ({ ...login, keyboardShow: false }))
+            }
         }
     }
 
@@ -146,6 +160,7 @@ const Login = (props) => {
             // -> Ici ce n'est pas forcément utile mais si besoin on le fait ici
             setErrors({});
             setLogin({ ...login, loading: false });
+            mounted = false;
         }
 
     }, [])
