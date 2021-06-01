@@ -16,13 +16,17 @@ import Program from './navigation/Program'
 import Player from './navigation/Player'
 import Tabs from './navigation/Tabs'
 
+// import du secureStore pour récupérer le JWT d'authentification
+import * as SecureStore from "expo-secure-store";
+
 // doc stack => https://reactnavigation.org/docs/stack-navigator/
 const Stack = createStackNavigator();
 
 export default function AppIntermediate() {
 
   const user = useSelector(({ userReducer }) => userReducer.user);
-  // console.log(`AppIntermediate -> user`, user)
+
+  const [jwt, setJwt] = useState();
 
   const HomeNavigator = () => {
     return (

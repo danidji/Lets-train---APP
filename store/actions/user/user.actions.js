@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { HOST_IP, HOST_IP_HOME } from '@env';
+import { config } from 'dotenv';
 
 export const USER_LOGGED = "[USER] USER LOGGED";
 
@@ -21,3 +22,27 @@ export function userLogout() {
             payload: {}
         })
 }
+
+
+export const EDIT_AVATAR_IMAGE = "[USER] EDIT AVATAR IMAGE"
+
+export const editAvatar = (formData) => dispatch =>
+    new Promise((resolve, reject) => {
+        const config = {
+            headers: {
+                "content-type": "multipart/form-data"
+            }
+        }
+        const request = axios.post(`${HOST_IP}/api/user/edit/avatar-image`
+            , formData // donnée à envoyer
+            , config // configuration 
+        );
+        request.then(response => {
+            resolve(
+                dispatch({
+                    type: EDIT_AVATAR_IMAGE,
+                    payload: response.data
+                })
+            )
+        })
+    })
