@@ -6,6 +6,10 @@ import * as ImagePicker from 'expo-image-picker';
 import { useSelector, useDispatch } from 'react-redux';
 import { userLogout, editAvatar } from "./../store/actions";
 
+// import { HOST_IP } from '@env';
+const HOST_IP = 'http://10.50.0.118:3030'
+
+import * as SecureStore from "expo-secure-store";
 
 
 export default function Account(props) {
@@ -19,7 +23,10 @@ export default function Account(props) {
     const dispatch = useDispatch();
 
     const logout = () => {
-        dispatch(userLogout())
+        SecureStore.deleteItemAsync("jwt_token").then(() => {
+
+            dispatch(userLogout())
+        })
     }
     // Gestion de rafraichissement de la screen
     const wait = (timeout) => {
@@ -29,7 +36,7 @@ export default function Account(props) {
         setRefreshing(true);
         wait(1000).then(() => {
             setRefreshing(false);
-            dispatch(getUser());
+            // dispatch(getUser());
         })
     });
 
@@ -46,7 +53,7 @@ export default function Account(props) {
         let uriParts = result.uri.split(".");
         let fileType = uriParts[uriParts.length - 1];
 
-        let imageName = user.username.replace(/\./g, "").split("@")[0]; //toto sur toto@gmail.com
+        let imageName = user.email.replace(/\./g, "").split("@")[0]; //toto sur toto@gmail.com
 
         let formData = new FormData();
         formData.append("image", {
@@ -54,14 +61,16 @@ export default function Account(props) {
             name: `${imageName}.${fileType}`,
             type: `image/${fileType}`
         })
-        // console.log(result);
+        console.log(result);
 
         dispatch(editAvatar(formData));
+
         if (!result.cancelled) {
             setImage(result.uri);
         }
     };
 
+    //Demande la permission d'accéer au fichier image du téléphone
     useEffect(() => {
         (async () => {
             if (Platform.OS !== 'web') {
@@ -110,11 +119,10 @@ export default function Account(props) {
                                 /></Avatar>
                         ) : (
                             <Avatar
-                                source={{
-                                    uri: user.avatar
-                                        ? `${HOST_IP}/uploads/${user.avatar}?${new Date()}`
-                                        : require('../assets/funny_user_avatar.png')
-                                }}
+                                source={user.avatar
+                                    ? { uri: `${HOST_IP}/uploads/${user.avatar}?${new Date()}` }
+                                    : require('../assets/funny_user_avatar.png')
+                                }
                                 avatarStyle={!image && styles.avatar_image}
                                 size={175}
                                 rounded
@@ -135,7 +143,7 @@ export default function Account(props) {
                     <Text style={styles.username}>{user.email}</Text>
                 </>
             </ScrollView>
-        </SafeAreaView>
+        </SafeAreaView >
     )
 }
 

@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack' // => permet d'englober l'ensemble de la navigation - une stack représente un bloc qui va permet de gérer la navigation entre les différents screens
 import { NavigationContainer } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { userLogged, check } from "./store/actions";
 
 // chargement des pages
 import Home from './navigation/Home';
@@ -18,6 +19,7 @@ import Tabs from './navigation/Tabs'
 
 // import du secureStore pour récupérer le JWT d'authentification
 import * as SecureStore from "expo-secure-store";
+import axios from 'axios';
 
 // doc stack => https://reactnavigation.org/docs/stack-navigator/
 const Stack = createStackNavigator();
@@ -25,8 +27,32 @@ const Stack = createStackNavigator();
 export default function AppIntermediate() {
 
   const user = useSelector(({ userReducer }) => userReducer.user);
+  const dispatch = useDispatch();
 
   const [jwt, setJwt] = useState();
+
+  //Enregistrement du token dans l'état JWT
+  useEffect(() => {
+    SecureStore.getItemAsync("jwt_token").then((token) => {
+      setJwt(token);
+    })
+  }, [])
+
+  useEffect(() => {
+    if (jwt) {
+      //axios intercepte les requêtes , utilise la config(=> élément de la request avec tous ses éléments propres) pour y insérer le token
+      axios.interceptors.request.use((config) => {
+        config.headers.Authorization = `Bearer ${jwt}`;
+        return config;
+      })
+      // si mon utilisateur est loggé 
+      dispatch(check()).then((data) => {
+        if (data.payload.user) {
+          dispatch(userLogged(data.payload.user));
+        }
+      })
+    }
+  }, [jwt])
 
   const HomeNavigator = () => {
     return (
