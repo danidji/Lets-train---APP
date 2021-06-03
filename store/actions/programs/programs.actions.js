@@ -4,7 +4,7 @@ import { HOST_IP, HOST_IP_HOME } from '@env';
 export const GET_PROGRAMS = "[PROGRAMS] GET PROGRAMS" // [NOM DU PARENT] + NOM DE L'ACTION
 
 export function getPrograms() {
-    const request = axios.get(`${HOST_IP}/api/programmes/liste`, {
+    const request = axios.get(`${HOST_IP_HOME}/api/programmes/liste`, {
         params: {}
     });
 

@@ -20,7 +20,7 @@ export const GET_SUBPROGRAMS = "[SUB_PROGRAMS] GET SUB PROGRAMS"
 //autre forme : 
 export const getSubPrograms = (id) => dispatch =>
     new Promise((resolve, reject) => {
-        const request = axios.get(`${HOST_IP}/api/sous-programmes/liste`, {
+        const request = axios.get(`${HOST_IP_HOME}/api/sous-programmes/liste`, {
             params: { parentId: id }
         });
         request.then(response => {

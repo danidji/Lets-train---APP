@@ -39,7 +39,7 @@ export const editAvatar = (formData) => {
             "content-type": "multipart/form-data"
         }
     }
-    const request = axios.post(`${HOST_IP}/api/user/edit/avatar-image`
+    const request = axios.post(`${HOST_IP_HOME}/api/user/edit/avatar-image`
         , formData // donnée à envoyer
         , configFormData // configuration 
     );

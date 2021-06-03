@@ -6,7 +6,7 @@ export const LOGIN_USER = "[AUTH] LOGIN USER";
 
 //methode avec mapDispatchToProps
 export function login(data) {
-    const request = axios.post(`${HOST_IP}/api/user/login`, {
+    const request = axios.post(`${HOST_IP_HOME}/api/user/login`, {
         params: { user: data.user }
     })
     return (dispatch) =>
@@ -24,7 +24,7 @@ export const REGISTER_USER = "[AUTH] REGISTER USER";
 // methode sans mapDispatchtoProps / avec useDispatch
 export const registerUser = (data) => dispatch =>
     new Promise((resolve, reject) => {
-        const request = axios.post(`${HOST_IP}/api/user/register`, {
+        const request = axios.post(`${HOST_IP_HOME}/api/user/register`, {
             params: { user: data.user }
         });
         request.then(response => {
@@ -42,7 +42,7 @@ export const CHECK_USER = "[AUTH] CHECK USER";
 
 export const check = () => dispatch =>
     new Promise((resolve, reject) => {
-        const request = axios.get(`${HOST_IP}/api/user/check`);
+        const request = axios.get(`${HOST_IP_HOME}/api/user/check`);
         request.then((response) => {
             resolve(
                 dispatch({
