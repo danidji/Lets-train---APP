@@ -32,12 +32,16 @@
     "react-native-tab-view": "2.16.0",
     "react-native-vector-icons": "^8.1.0",
     "react-native-web": "~0.13.12",
+    "react-native-web-webview": "^1.0.2",
     "react-native-webview": "^11.4.4",
     "react-native-youtube-iframe": "^2.0.1",
     "react-redux": "^7.2.4",
     "redux": "^4.1.0",
     "redux-logger": "^3.0.6",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "validator": "^13.6.0",
+    "expo-secure-store": "~10.1.0",
+    "expo-image-picker": "~10.1.4"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0"
